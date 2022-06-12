@@ -69,31 +69,22 @@ public:
 // end - ітератор кінця вхідного контейнера (вказує на елемент після останнього)
 // to - ітератор початку результуючого контейнера (вказує на перший елемент)
 template<class T>
-int replace(T * begin, T * end, T * to)
+int replace(T* begin, T* end, T* to)
 {
 	int n = 0;
-	for (T* start = begin; start < end; start++)
-	{
-		for (T* from = begin; from < end; from++) // from - ітератор вхідного контейнера
-		{ // вказує на поточний елемент
-			*to = *from;
-			to++;
-			T* temp = to;
-			to = to + 1;
-			++to = temp;
-			*to = *end-1; 
-			*to = *from;
-			to++;
-		    temp = to;
-			to = to + 1;
-			++to = temp;
-			*to = *end - 1;
-		}
-		//n++;
-		end--;
+	for (T* from = begin; from < end; from++) // from - ітератор вхідного контейнера
+	{ // вказує на поточний елемент
+		/*
+		*to = *from;
+		to++;
+		T* temp = 0;
+		to = to + 1;
+		++to = temp;*/
+		
 	}
 	return n;
 }
+
 // дублюємо елементи, для яких предикат p набуває значення true
 // begin - ітератор початку вхідного контейнера (вказує на перший елемент)
 // end - ітератор кінця вхідного контейнера (вказує на елемент після останнього)
@@ -130,19 +121,19 @@ int main()
 	cout << endl;
 	for (int k = 0; k < x; k++)
 	{
-		a[k] = k;
+		a[k] = k - 2;
 		cout << a[k] << '\t';
 	}
 	cout << endl;
-	int b[1], c[5]; // результуючі контейнери
+	int b[20], c[20]; // результуючі контейнери
 // (потрібно виділити достатньо пам'яті)
 
 	cout << "\nreplace all container:\n";
-	int u = replace(&a[0], &a[x], &b[0]); // продублювали всі елементи
+	replace(&a[0], &a[x], &b[0]); // продублювали всі елементи
 	cout << endl;
-	for (int i = 0; i < u; i++)
-		cout << b[i] << '\t'; // вивели результат
-	cout << endl;
+	//for (int i = 0; i < x; i++)
+	//	cout << b[i] << '\t'; // вивели результат
+	//cout << endl;
 
 	Predicate<int>* even = new Even<int>(); // функтор: "парні елементи"
 
