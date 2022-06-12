@@ -7,8 +7,6 @@ class Predicate
 public:
 	virtual bool operator () (T x) = 0;
 };
-
-// реалізуємо інтерфейс функтором - перевірка, чи значення дорівнює нулю
 template<class T>
 class Zero : public Predicate<T>
 {
@@ -19,8 +17,6 @@ public:
 		return x == zero;
 	}
 };
-// реалізуємо інтерфейс функтором - перевірка, чи значення додатне
-// працює лише для числових типів
 template<class T>
 class Positive : public Predicate<T>
 {
@@ -30,8 +26,7 @@ public:
 		return x > 0;
 	}
 };
-// реалізуємо інтерфейс функтором - перевірка, чи значення від'ємне
-// працює лише для числових типів
+
 template<class T>
 class Negative : public Predicate<T>
 {
@@ -41,8 +36,7 @@ public:
 		return x < 0;
 	}
 };
-// реалізуємо інтерфейс функтором - перевірка, чи значення парне
-// працює лише для цілих типів
+
 template<class T>
 class Even : public Predicate<T>
 {
@@ -52,8 +46,7 @@ public:
 		return x % 2 == 0;
 	}
 };
-// реалізуємо інтерфейс функтором - перевірка, чи значення не парне
-// працює лише для цілих типів
+
 template<class T>
 class Odd : public Predicate<T>
 {
@@ -63,42 +56,39 @@ public:
 		return x % 2 != 0;
 	}
 };
-// дублюємо всі елементи
-// begin - ітератор початку вхідного контейнера (вказує на перший елемент)
 
-// end - ітератор кінця вхідного контейнера (вказує на елемент після останнього)
-// to - ітератор початку результуючого контейнера (вказує на перший елемент)
 template<class T>
 int replace(T* begin, T* end, T* to)
 {
-	int n = 0;
-	for (T* from = begin; from < end; from++) // from - ітератор вхідного контейнера
-	{ // вказує на поточний елемент
-		/*
+	T* n = end;
+	for (T* from = begin; from < end; from++)
+	{
+		
 		*to = *from;
 		to++;
-		T* temp = 0;
-		to = to + 1;
-		++to = temp;*/
-		
+		T* temp = to;
+		to = to +1 ;
+		++to = temp;
+		n--;
 	}
-	return n;
+	return *n;
 }
 
-// дублюємо елементи, для яких предикат p набуває значення true
-// begin - ітератор початку вхідного контейнера (вказує на перший елемент)
-// end - ітератор кінця вхідного контейнера (вказує на елемент після останнього)
-// to - ітератор початку результуючого контейнера (вказує на перший елемент)
 template<class T>
 int replace_if(T* begin, T* end, T* to, Predicate<T>& p)
 {
-	int n = 0; // n - кількість елементів у результуючому контейнері
+	int n = 0; 
+	for (T* i = begin; i < end; i++)
+	{
+		if (p(*i))
+			n++;
+	}
 	for (T* start = begin; start < end; start++)
 	{
-		for (T* from = start; from < end; from++) // from - ітератор вхідного контейнера
-		{ // вказує на поточний елемент // скопіювали елемент
+		for (T* from = start; from < end; from++) 
+		{ 
 			
-			if (p(*from)) // якщо справджується умова предикату
+			if (p(*from)) 
 			{
 				*to = *from;
 				to++;
@@ -108,7 +98,6 @@ int replace_if(T* begin, T* end, T* to, Predicate<T>& p)
 				*to = *end-1;
 			}
 		}
-		n++;
 		end--;
 	}
 	return n;
@@ -117,33 +106,38 @@ int main()
 {
 	const int x = 10;
 	int a[x]; // вхідний контейнер
+	
+	
 	cout << "Input container:\n";
 	cout << endl;
 	for (int k = 0; k < x; k++)
 	{
-		a[k] = k - 2;
+		a[k] = k;
 		cout << a[k] << '\t';
 	}
 	cout << endl;
-	int b[20], c[20]; // результуючі контейнери
-// (потрібно виділити достатньо пам'яті)
+
+
+	
+	int b[x*3], c[x*3]; // результуючі контейнери
+
 
 	cout << "\nreplace all container:\n";
-	replace(&a[0], &a[x], &b[0]); // продублювали всі елементи
+	int u = replace(&a[0], &a[x], &b[0]); 
 	cout << endl;
-	//for (int i = 0; i < x; i++)
-	//	cout << b[i] << '\t'; // вивели результат
-	//cout << endl;
+	for (int i = 0; i < u; i++)
+		cout << b[i] << '\t'; 
+	cout << endl;
 
-	Predicate<int>* even = new Even<int>(); // функтор: "парні елементи"
+	Predicate<int>* even = new Even<int>(); 
 
-	cout << "replace if container:\n";
-	int n = replace_if(&a[0], &a[x], &c[0], *even); // викинули парні елементи
+	cout << "\nreplace if container:\n";
+	int n = replace_if(&a[0], &a[x], &c[0], *even); 
 	cout << endl;
 	for (int i = 0; i < n; i++)
 		cout << c[i] << '\t';
 	cout << endl;
-	
+
 	return 0;
 
-}
+} 
